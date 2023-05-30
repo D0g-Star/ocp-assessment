@@ -186,11 +186,12 @@ $ oc apply -f cronjob-etcd-bkp.yml
 ## 3. Test a Backup
 ### 3.1 Trigger a Manual backup job
 ```
-oc create job --from=cronjob/openshift-backup manual-backup-(date +"%Y%m%d-%H%M")
+oc create job --from=cronjob/openshift-backup manual-backup-$(date +"%Y%m%d-%H%M")
 ```
 
 ### 3.2 Check backup status
 ```
+oc describe job openshift-backup
 oc logs -n ocp-etcd-backup manual-backup-<DATE FROM ABOVE>
 ```
 
