@@ -1,0 +1,10 @@
+-----BEGIN CERTIFICATE-----
+root
+-----END CERTIFICATE-----
+-----BEGIN CERTIFICATE-----
+intermediate
+-----END CERTIFICATE-----
+
+or 
+intermediate
+root

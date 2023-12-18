@@ -1,0 +1,10 @@
+credentials:
+- type: basic_auth 
+  data:
+    prismCentral: 
+      username: username
+      password: password
+    prismElements: 
+    - name: prismElements_ip
+      username: username
+      password: password

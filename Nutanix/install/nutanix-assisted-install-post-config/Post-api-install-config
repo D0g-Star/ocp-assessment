@@ -1,0 +1,207 @@
+### 1. In the OpenShift Container Platform command line interface, update the Nutanix cluster configuration settings: 
+
+```
+oc patch infrastructure/cluster --type=merge --patch-file=/dev/stdin <<-EOF
+{
+  "spec": {
+    "platformSpec": {
+      "nutanix": {
+        "prismCentral": {
+          "address": "<prismcentral_address>",
+          "port": <prismcentral_port>
+        },
+        "prismElements": [
+          {
+            "endpoint": {
+              "address": "<prismelement_address>",
+              "port": <prismelement_port>
+            },
+            "name": "<prismelement_clustername>"
+          }
+        ]
+      },
+      "type": "Nutanix"
+    }
+  }
+}
+EOF
+```
+### 2. Create the Nutanix secret: 
+#### 2.1 Manually create in Console due to ')' in password
+
+
+
+```
+cat <<EOF | oc create -f -
+apiVersion: v1
+kind: Secret
+metadata:
+   name: nutanix-credentials
+   namespace: openshift-machine-api
+type: Opaque
+stringData:
+  credentials: |
+[{"type":"basic_auth","data":{"prismCentral":{"username":"<username>","password":"${password}"},"prismElements":null}}}]
+EOF
+```
+###  3. Only on OCP 4.13
+https://access.redhat.com/documentation/en-us/assisted_installer_for_openshift_container_platform/2023/html/assisted_installer_for_openshift_container_platform/assembly_installing-on-nutanix#nutanix-post-installation-configuration_assembly_installing-on-nutanix
+
+## Creating the Nutanix CSI Operator group
+
+### 1. Open the Nutanix CSI Operator Group YAML file
+```
+$ vi openshift-cluster-csi-drivers-operator-group.yaml
+```
+### 2. Edit the YAML file as follows: 
+```
+apiVersion: operators.coreos.com/v1
+kind: OperatorGroup
+metadata:
+  generateName: openshift-cluster-csi-drivers
+  namespace: openshift-cluster-csi-drivers
+spec:
+  targetNamespaces:
+  - openshift-cluster-csi-drivers
+  upgradeStrategy: Default
+```
+### 3.Create the Operator Group
+```
+oc create -f openshift-cluster-csi-drivers-operator-group.yaml
+```
+
+
+## 3.  Installing the Nutanix CSI Operator
+#### 1. Get the parameter values for the Nutanix CSI Operator YAML file:
+    ```
+    oc get packagemanifests | grep nutanix
+    ``` 
+#### 2. Assign the default channel for the Operator to a BASH variable: 
+    ```
+    DEFAULT_CHANNEL=$(oc get packagemanifests nutanixcsioperator -o jsonpath={.status.defaultChannel})
+    ```
+#### 3. Assign the starting cluster service version (CSV) for the Operator to a BASH variable: 
+    ```
+    STARTING_CSV=$(oc get packagemanifests nutanixcsioperator -o jsonpath=\{.status.channels[*].currentCSV\})
+    ```
+#### 4. Assign the catalog source for the subscription to a BASH variable:
+
+    ```
+    CATALOG_SOURCE=$(oc get packagemanifests nutanixcsioperator -o jsonpath=\{.status.catalogSource\})
+    ```
+#### 5. Assign the Nutanix CSI Operator source namespace to a BASH variable: 
+
+    ```
+    SOURCE_NAMESPACE=$(oc get packagemanifests nutanixcsioperator -o jsonpath=\{.status.catalogSourceNamespace\})
+    ```
+
+###  2. Create the Nutanix CSI Operator YAML file using the BASH variables:
+    ```
+    cat << EOF > nutanixcsioperator.yaml
+    apiVersion: operators.coreos.com/v1alpha1
+    kind: Subscription
+    metadata:
+      name: nutanixcsioperator
+      namespace: openshift-cluster-csi-drivers
+    spec:
+      channel: $DEFAULT_CHANNEL
+      installPlanApproval: Automatic
+      name: nutanixcsioperator
+      source: $CATALOG_SOURCE
+      sourceNamespace: $SOURCE_NAMESPACE
+      startingCSV: $STARTING_CSV
+    EOF
+    ```
+#### 2.1 Create the CSI Nutanix Operator: 
+    ```
+    oc apply -f nutanixcsioperator.yaml
+    ```
+#### 2.2 Check subscription state
+Run the following command until the Operator subscription state changes to AtLatestKnown. This indicates that the Operator subscription has been created, and may take some time. 
+
+  ```
+  oc get subscription nutanixcsioperator -n openshift-cluster-csi-drivers -o 'jsonpath={..status.state}'
+  ```
+
+### 3. Deploying the Nutanix CSI storage driver
+#### 3.1 Create a NutanixCsiStorage resource to deploy the driver: 
+    ```
+$ cat <<EOF | oc create -f -
+apiVersion: crd.nutanix.com/v1alpha1
+kind: NutanixCsiStorage
+metadata:
+  name: nutanixcsistorage
+  namespace: openshift-cluster-csi-drivers
+spec: {}
+EOF
+    ```
+#### 3.1 Create a Nutanix secret YAML file for the CSI storage driver: 
+    ```
+    $ cat <<EOF | oc create -f -
+    apiVersion: v1
+    kind: Secret
+    metadata:
+      name: ntnx-secret
+      namespace: openshift-cluster-csi-drivers
+    stringData:
+      # prism-element-ip:prism-port:admin:password
+      key: <prismelement_address:prismelement_port:prismcentral_username:prismcentral_password>
+    EOF
+    ```
+### 4. Validating the post-installation configurations
+##### 4.1 Verify that you can create a storage class: 
+    ```
+    cat <<EOF | oc create -f -
+    kind: StorageClass
+    apiVersion: storage.k8s.io/v1
+    metadata:
+      name: nutanix-volume
+      annotations:
+        storageclass.kubernetes.io/is-default-class: 'true'
+    provisioner: csi.nutanix.com
+    parameters:
+      csi.storage.k8s.io/fstype: ext4
+      csi.storage.k8s.io/provisioner-secret-namespace: openshift-cluster-csi-drivers
+      csi.storage.k8s.io/provisioner-secret-name: ntnx-secret
+      storageContainer: <nutanix_storage_container>
+      csi.storage.k8s.io/controller-expand-secret-name: ntnx-secret
+      csi.storage.k8s.io/node-publish-secret-namespace: openshift-cluster-csi-drivers
+      storageType: NutanixVolumes
+      csi.storage.k8s.io/node-publish-secret-name: ntnx-secret
+      csi.storage.k8s.io/controller-expand-secret-namespace: openshift-cluster-csi-drivers
+    reclaimPolicy: Delete
+    allowVolumeExpansion: true
+    volumeBindingMode: Immediate
+    EOF
+    ```
+##### 4.2  Verify that you can create the Nutanix persistent volume claim (PVC): 
+```
+ cat <<EOF | oc create -f -
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: nutanix-volume-pvc
+  namespace: openshift-cluster-csi-drivers
+  annotations:
+    volume.beta.kubernetes.io/storage-provisioner: csi.nutanix.com
+    volume.kubernetes.io/storage-provisioner: csi.nutanix.com
+  finalizers:
+    - kubernetes.io/pvc-protection
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: nutanix-volume
+  volumeMode: Filesystem
+EOF
+```
+
+##### 4.3 Validate that the persistent volume claim (PVC) status is Bound: 
+```
+$ oc get pvc -n openshift-cluster-csi-drivers
+```
+
+### References: 
+https://access.redhat.com/documentation/en-us/assisted_installer_for_openshift_container_platform/2023/html/assisted_installer_for_openshift_container_platform/assembly_installing-on-nutanix#nutanix-post-installation-configuration_assembly_installing-on-nutanix

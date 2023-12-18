@@ -1,0 +1,16 @@
+  apiVersion: cloudcredential.openshift.io/v1
+  kind: CredentialsRequest
+  metadata:
+    annotations:
+      include.release.openshift.io/self-managed-high-availability: "true"
+    labels:
+      controller-tools.k8s.io: "1.0"
+    name: openshift-machine-api-nutanix
+    namespace: openshift-cloud-credential-operator
+  spec:
+    providerSpec:
+      apiVersion: cloudcredential.openshift.io/v1
+      kind: NutanixProviderSpec
+    secretRef:
+      name: nutanix-credentials
+      namespace: openshift-machine-api

@@ -1,0 +1,13 @@
+apiVersion: v1
+data:
+  ca-bundle.crt: | 
+   -----BEGIN CERTIFICATE-----
+   root
+   -----END CERTIFICATE-----
+   -----BEGIN CERTIFICATE-----
+   intermediate
+   -----END CERTIFICATE-----
+kind: ConfigMap
+metadata:
+  name: user-ca-bundle 
+  namespace: openshift-config 
