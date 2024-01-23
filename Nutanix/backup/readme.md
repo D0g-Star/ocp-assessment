@@ -27,12 +27,12 @@ sudo dnf install nfs-utils -y
  systemctl start nfs-server
  systemctl enable nfs-server
  systemctl status nfs-server
- sudo mkdir -p /mnt/openshift/registry
+ sudo mkdir -p /mnt/openshift/backup
  vi /etc/exports
 ```
 ### 2.2 Add the following, including the options for rw,no_wdelay,no_root_squash:
 ```
-/mnt/openshift/registry   192.168.0.1/24(rw,sync,no_wdelay,no_root_squash,insecure)
+/mnt/openshift/backup   192.168.0.1/24(rw,sync,no_wdelay,no_root_squash,insecure)
 ```
 ### 2.3 Export the new share with:
     exportfs -arv
