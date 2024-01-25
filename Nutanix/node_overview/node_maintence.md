@@ -1,6 +1,6 @@
 ## Node Maintence
-### 1 . 
-### 2. To perform a graceful restart of a node:
+
+### To perform a graceful restart of a node:
 #### 1. Mark the node as unschedulable:
 ```
 oc adm cordon <node1>

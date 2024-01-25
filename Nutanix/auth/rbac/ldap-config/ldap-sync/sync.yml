@@ -1,0 +1,25 @@
+kind: LDAPSyncConfig
+apiVersion: v1
+metadata:
+  name: ldap-group-syncer-alt
+  namespace: ldap-sync
+url: ldaps://ldaps.uchc.net:636
+bindDN: "CN=svc_openshift,OU=_DC_StagedUpgrade,DC=uchc,DC=net"
+bindPassword: '*****'
+insecure: false
+groupUIDNameMapping:
+  "CN=ServerTeam,OU=Administration,OU=Security,OU=GROUPS,OU=UConn Health,DC=uchc,DC=net": OCP-Cluster-Admins
+augmentedActiveDirectory:
+    groupsQuery:
+        derefAliases: never
+        pageSize: 0
+    groupUIDAttribute: dn
+    groupNameAttributes: [ cn ]
+    usersQuery:
+        baseDN: "DC=uchc,DC=net"
+        scope: sub
+        derefAliases: never
+        filter: (objectclass=person)
+        pageSize: 0
+    userNameAttributes: [ sAMAccountName ]
+    groupMembershipAttributes: [ "memberOf:1.2.840.113556.1.4.1941:" ]

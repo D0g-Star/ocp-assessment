@@ -1,8 +1,8 @@
-# Guide for OCP Metric Setup
+# (Pending) Guide for OCP Metric Setup
 
 ## Notes
 
-  * This is tested with 4.9+
+  * This is tested with 4.12
 
 ## Configure Cluster Metrics
 

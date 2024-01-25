@@ -1,12 +1,9 @@
-# Congigure a cluster-wide proxy
-
-References
-- https://docs.openshift.com/container-platform/4.9/networking/configuring-a-custom-pki.html
+# Configure a Cluster-wide Proxy
 
 ## Create Proxy with CA Cert
 
 ### 1. Create ca-bundle
-Add the X.509 encoded Certs to user-ca-bundle.yaml
+Add the X.509 PEM encoded Certs to user-ca-bundle.yaml
 Full root and intermediate cert
 
 ### 2. Create the Configmap
@@ -36,3 +33,4 @@ oc patch proxy/cluster --type=merge --patch='{"spec":{"trustedCA":{"name":"user-
 
 ## References
 - https://docs.openshift.com/container-platform/4.12/security/certificates/updating-ca-bundle.html
+- https://docs.openshift.com/container-platform/4.12/networking/configuring-a-custom-pki.html

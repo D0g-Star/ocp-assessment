@@ -1,0 +1,26 @@
+apiVersion: config.openshift.io/v1
+kind: OAuth
+metadata:
+  name: cluster
+spec:
+  identityProviders:
+    - ldap:
+        attributes:
+          email:
+            - mail
+          id:
+            - sAMAccountName
+          name:
+            - cn
+          preferredUsername:
+            - sAMAccountName
+        bindDN: "CN=serviceaccount,OU=Users,DC=acme,DC=local"
+        bindPassword:
+          name: ldap-secret
+        insecure: false
+        url: >-
+          ldaps://ldaps.server:636/DC=acme,DC=local?sAMAccountName?sub
+      mappingMethod: claim
+      name: Active Directory
+      type: LDAP
+    

@@ -1,5 +1,8 @@
 ## Setup NTP in Machines
-### 1. curl https://mirror.openshift.com/pub/openshift-v4/clients/butane/v0.16.0-1/butane --output butane
+### 1. Get butane executable: 
+```
+curl https://mirror.openshift.com/pub/openshift-v4/clients/butane/v0.16.0-1/butane --output butane
+```
 
 ### 2. Make buntane file executable
   ```
@@ -9,7 +12,7 @@
   ``` 
 
 ### 3. Create butane files and set ntp server under Storage->files->inline
-Create a 99-worker-custom.bu & 99-master-custom.bu
+Ex ) Create a 99-worker-custom.bu & 99-master-custom.bu
 
 ```
 cat <<EOF | oc create -f -

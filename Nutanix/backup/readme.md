@@ -1,7 +1,6 @@
 # NFS Backup of ETCD 
 
-
-## 1. In OCP CLI :
+## In OCP CLI :
 ### 1. Create a project.
     oc new-project ocp-etcd-backup --description "Openshift Backup Automation Tool" --display-name "Backup ETCD Automation"
 ### 2. Create Service Account
@@ -12,15 +11,15 @@
     oc apply -f cluster-role-binding-etcd-bkp.yaml
 ### 5. Add service account to SCC "privileged":
     oc adm policy add-scc-to-user privileged -z openshift-backup
-### 6. Create Backup CronJob\
+### 6. Create Backup CronJob
 #### 6.1 Change <nfs-server-IP>:<shared-path>  as required. Also, make sure on you already have the /home/core/backup directory created.
     oc apply -f cronjob-etcd-bkp.yaml
 ### 7. After creating CronJob, you can force the execution for validation with the command:
     oc create job backup --from=cronjob/openshift-backup
 
+<br>
 
-
-## 2. Create and Set up NFS RHEL Host
+## Create and Set up NFS RHEL Host
 ### 2.1 NFS Creation
 ```
 sudo dnf install nfs-utils -y
