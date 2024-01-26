@@ -1,9 +1,6 @@
 # Configure ETCD Encryption
 
-## References
-  - https://docs.openshift.com/container-platform/4.11/security/encrypting-etcd.html
-
-## 1. Enabling Encryption
+## 1. Enabling Encryption after setting up backups
 ```
 oc patch apiserver -p '{"spec":{"encryption":{"type":"aescbc"}}}'
 ```
@@ -24,3 +21,6 @@ oc patch apiserver -p '{"spec":{"encryption":{"type":"identity"}}}'
 
 You can check the encryption status again after decrupting it. It should show "DecryptionCompleted"
 
+
+## References
+  - https://docs.openshift.com/container-platform/4.11/security/encrypting-etcd.html
