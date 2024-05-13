@@ -1,14 +1,11 @@
-
+ee
 # Order:
-## 1. Maintence Configuration
-### 1.1 NTP 
-### 1.2 Ingress Scale
-## 2. Configure  CSI and Storage
-## 3. Persistance for Metric's Storage
-## 4. Cluster-Wild Proxy Install
-## 5. Ingress SSL Cert Install
-## 6. Authentication
-## 7. Log Forwarding
-## 8. ETCD Backup/Encryption
-## 9. Setup Alerts/Monitoring
-## 10. Kubeadmin/Local User Cleanup
+## 1. NTP 
+## 2. Ingress Scale 
+## 3. Storage (Completed)
+## 4. Persistance for Metrics/Storage
+## 5. CA Bundle Install
+## 6. Ingress SSL Cert Install
+## 7. Authentication
+## 8. Log Forwarding
+## 9. ETCD Backup/Encryption
