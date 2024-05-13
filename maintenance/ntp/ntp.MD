@@ -1,7 +1,4 @@
-# Configure NTP on UPI INstalls
-
-References
- - https://docs.openshift.com/container-platform/4.9/installing/install_config/installing-customizing.html
+# Configure NTP on IPI INstalls
 
 
 ## Download/Install Butane on Bastion host
@@ -33,3 +30,19 @@ oc get machineconfigpool
 oc get machineconfigs
 oc describe mcp worker
 ```
+## Verify NTP Servers
+### Access Node Pods
+```
+oc get nodes
+oc get debug node/<openshift_node_name>
+```
+### Within Debug Pods
+```bash
+ chroot /host
+ chronyc sources
+ chronyc sourcestats
+ chronyc tracking
+```
+
+References
+    * https://docs.openshift.com/container-platform/4.12/installing/install_config/installing-customizing.html

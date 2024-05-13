@@ -1,4 +1,4 @@
-
+# Creating Local User
 Create HTPasswd File
 ```
 htpasswd -c -B -b ./htpasswd <user_name> <password>
@@ -25,6 +25,8 @@ oc adm groups new local-admins
 oc adm groups add-users local-admins <local user>
 oc adm policy add-cluster-role-to-group cluster-admin local-admins
 ```
+
+Test Login Access
 
 Remove kubeadmin
 ```

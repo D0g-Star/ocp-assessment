@@ -1,0 +1,23 @@
+openssl req -new -sha256 -nodes -out ./ocp_cert_request.csr -newkey rsa:2048 -keyout ./ocp_cert_key.key -config <(
+cat <<-EOF
+[req]
+default_bits = 2048
+prompt = no
+default_md = sha256
+req_extensions = req_ext
+distinguished_name = dn
+[ dn ]
+C=US
+ST=Maryland
+L=Lanham
+O=CDW
+OU=Technology
+emailAddress=system@cdw.com
+CN={{ OCP_FQDN }}
+[ req_ext ]
+subjectAltName = @alt_names
+[ alt_names ]
+DNS.1 = {{ OCP_FQDN }}
+IP.1  = {{ OCP_FQDN_IP }}
+EOF
+)

@@ -1,6 +1,6 @@
 kind: LDAPSyncConfig
 apiVersion: v1
-url: ldap://10.250.110.10:389
+url: ldap://ldap.example.com:389/
 bindDN: 'CN=Kalen Peterson,OU=Sirius,OU=OCPEval,DC=ocpeval,DC=scstec,DC=net'
 bindPassword: '*****'
 insecure: true

@@ -19,7 +19,8 @@ spec:
           name: ldap-secret
         insecure: true
         url: >-
-          ldap://10.250.110.10:389/DC=ocpeval,DC=scstec,DC=net?sAMAccountName?sub
+        # ldap://ldap.example.com:389/DC=ocpeval,DC=net?sAMAccountName?sub
+        # ldaps://ldap.example.com:636/DC=ocpeval,DC=scstec,DC=net?sAMAccountName?sub
       mappingMethod: claim
       name: Active Directory
       type: LDAP

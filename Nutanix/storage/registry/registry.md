@@ -37,7 +37,7 @@ spec:
     resources:
       requests:
         storage: 100Gi
-    storageClassName: nutanix-volume
+    storageClassName: <change-this>
 ```
 
 ## References:

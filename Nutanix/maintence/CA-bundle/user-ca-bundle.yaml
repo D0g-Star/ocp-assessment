@@ -2,10 +2,13 @@ apiVersion: v1
 data:
   ca-bundle.crt: | 
    -----BEGIN CERTIFICATE-----
-   root
+   wildcard
    -----END CERTIFICATE-----
    -----BEGIN CERTIFICATE-----
    intermediate
+   -----END CERTIFICATE-----
+   -----BEGIN CERTIFICATE-----
+   root
    -----END CERTIFICATE-----
 kind: ConfigMap
 metadata:

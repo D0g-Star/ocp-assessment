@@ -1,10 +1,10 @@
 -----BEGIN CERTIFICATE-----
-root
+wildcard
 -----END CERTIFICATE-----
 -----BEGIN CERTIFICATE-----
 intermediate
 -----END CERTIFICATE-----
-
-or 
-intermediate
+-----BEGIN CERTIFICATE-----
 root
+-----END CERTIFICATE-----
+

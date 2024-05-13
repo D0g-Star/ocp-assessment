@@ -1,0 +1,25 @@
+apiVersion: logging.openshift.io/v1
+kind: ClusterLogForwarder
+metadata:
+  name: instance 
+  namespace: openshift-logging 
+spec:
+  outputs:
+   - name: openshift-test
+     type: syslog 
+     syslog: 
+       facility: local0
+       rfc: RFC3164
+       payloadKey: message
+       severity: informational
+     url: 'tcp://<syslog-server>.:514'
+  pipelines:
+   - name: openshift-logging
+     inputRefs: 
+     - infrastructure
+     - application
+     outputRefs: 
+     - openshift-test
+     parse: json 
+     labels:
+       secure: "true" 

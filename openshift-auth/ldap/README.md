@@ -92,3 +92,6 @@ Cluster ReadOnly
 ```
 oc adm policy add-cluster-role-to-group cluster-reader <groupname>
 ```
+
+* https://docs.openshift.com/container-platform/4.12/authentication/identity_providers/configuring-ldap-identity-provider.html
+* 
