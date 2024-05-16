@@ -1,4 +1,4 @@
-# Configurating default Ingress SSL Certificate
+# Configuring default Ingress SSL Certificate
 
 ## 1. Import CA Bundle
 Follow the instruction to import/trust a custom PKI(CA-Bundle)
