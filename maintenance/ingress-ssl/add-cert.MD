@@ -2,10 +2,11 @@
 
 ## 1. Import CA Bundle
 Follow the instruction to import/trust a custom PKI(CA-Bundle)
-  
+* Wait for Nodes to update with new CA Bundle
+
 ## 2. Create the Secret
 ```
-oc create secret tls default-ingress-cert --cert=certs/full-chain.crt --key=certs/cert.key -n openshift-ingress
+oc create secret tls default-ingress-cert --cert=certs/wildcard.crt --key=certs/cert.key -n openshift-ingress
 ```
 
 ## 3. Update the Ingress Controller

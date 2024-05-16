@@ -4,7 +4,7 @@
 
 ### 1. Create ca-bundle
 Add the X.509 PEM encoded Certs to user-ca-bundle.yaml
-Full root and intermediate cert
+Full root and intermediate cert (not wildcard)
 
 ### 2. Create the Configmap
 ```
