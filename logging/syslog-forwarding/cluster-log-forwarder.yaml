@@ -1,0 +1,28 @@
+apiVersion: logging.openshift.io/v1
+kind: ClusterLogForwarder
+metadata:
+  name: instance 
+  namespace: openshift-logging 
+spec:
+  outputs:
+   - name: openshift-logging-output
+     type: syslog 
+     syslog: 
+       addLogSource: true
+       facility: local0
+       rfc: RFC3164
+       payloadKey: message
+       severity: informational
+       tag: pococp
+     url: 'tcp://ip-to-forward:514'
+  pipelines:
+   - name: openshift-logging
+     inputRefs: 
+     - infrastructure
+     - application
+     outputRefs: 
+     - openshift-logging-output
+     parse: json 
+     labels:
+       secure: "true" 
+       clusterId: "C1234"
