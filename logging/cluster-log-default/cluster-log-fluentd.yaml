@@ -1,3 +1,5 @@
+#OCP 4.12
+---
 apiVersion: "logging.openshift.io/v1"
 kind: "ClusterLogging"
 metadata:
